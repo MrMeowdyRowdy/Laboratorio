@@ -36,12 +36,10 @@ END
 GO
 
 CREATE PROCEDURE ingresoResultadoDetalles
-	--Se declaran los argumentos que recibe el procedimiento almacenado
     @fechaExamen DATETIME,
     @fechaEntrega DATETIME,
     @resultado DECIMAL(7, 3)
 AS
-	--Se realiza la inserción de la tupla en la tabla Resultado.
 	INSERT INTO Resultado(fechaExamen, fechaEntrega, resultado) 
 	VALUES(@fechaExamen,@fechaEntrega,@resultado)
 GO
