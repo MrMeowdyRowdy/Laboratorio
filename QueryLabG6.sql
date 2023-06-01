@@ -2,7 +2,7 @@ USE LabX
 GO
 
 ----------------------
---Tabla y Trigger de auditoría
+--Tabla y Trigger de auditorï¿½a
 ----------------------
 
 DROP TABLE IF EXISTS AuditoriaResultado
@@ -76,7 +76,7 @@ AS
 			END
 		END TRY
 		BEGIN CATCH
-			RAISERROR('Errores al insertar en la tabla de auditoría',16,10)
+			RAISERROR('Errores al insertar en la tabla de auditorï¿½a',16,10)
 			ROLLBACK TRANSACTION;
 		END CATCH
 	END
@@ -136,7 +136,7 @@ CREATE TABLE Laboratorista (
 GO
 
 ----------------------
---Alteración de tabla resultado
+--Alteraciï¿½n de tabla resultado
 ----------------------
 
 ALTER TABLE Resultado
@@ -144,7 +144,7 @@ ADD idLaboratorista SMALLINT;
 GO
 
 ----------------------
---Alteración de tabla paciente
+--Alteraciï¿½n de tabla paciente
 ----------------------
 
 ALTER TABLE paciente
@@ -152,7 +152,7 @@ ADD examenes SMALLINT;
 GO
 
 ----------------------
---Creación de trigger de calculo de examenes
+--Creaciï¿½n de trigger de calculo de examenes
 ----------------------
 
 CREATE TRIGGER tr_UpdateExamenPaciente ON Resultado
@@ -160,3 +160,48 @@ FOR Insert
 AS
 GO
 
+
+CREATE PROCEDURE AddResultado 
+@Nexamen VARCHAR(50),
+@CI CEDULAIDENTIDAD,
+@FechaPedido DATE
+AS
+IF (@FechaPedido NOT LIKE '__/__/____')
+BEGIN
+	RAISERROR ('La fecha no coincide con el formato mm/dd/aaaa',16,10)
+END
+ELSE
+BEGIN
+	IF (SELECT idExamen FROM Examen WHERE nombre LIKE @Nexamen) IS NULL
+	BEGIN
+		RAISERROR ('El examen especificado no existe',16,10)
+	END
+	ELSE
+	BEGIN
+		DECLARE @EXID INT
+		SET @EXID = (SELECT idExamen FROM Examen WHERE nombre LIKE @Nexamen)
+	END
+	IF (SELECT idUsuario FROM Paciente WHERE cedula LIKE @CI) IS NULL
+	BEGIN
+		RAISERROR ('El paciente especificado no existe',16,10)
+	END
+	ELSE
+	BEGIN
+		DECLARE @USID INT
+		SET	@USID = (SELECT idUsuario FROM Paciente WHERE cedula LIKE @CI)
+	END
+	
+	INSERT INTO Resultado (idExamen,idUsuario,fechaPedido)
+	VALUES (@EXID,@USID,@FechaPedido)
+END
+
+GO
+
+CREATE PROCEDURE ingresoResultadoDetalles
+    @fechaExamen DATETIME,
+    @fechaEntrega DATETIME,
+    @resultado DECIMAL(7, 3)
+AS
+	INSERT INTO Resultado(fechaExamen, fechaEntrega, resultado) 
+	VALUES(@fechaExamen,@fechaEntrega,@resultado)
+GO
