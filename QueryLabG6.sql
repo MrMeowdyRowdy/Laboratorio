@@ -2,7 +2,7 @@ USE LabX
 GO
 
 ----------------------
---Tabla y Trigger de auditor�a
+--Tabla y Trigger de auditoría
 ----------------------
 
 DROP TABLE IF EXISTS AuditoriaResultado
@@ -136,7 +136,7 @@ CREATE TABLE Laboratorista (
 GO
 
 ----------------------
---Alteraci�n de tabla resultado
+--Alteración de tabla resultado
 ----------------------
 
 ALTER TABLE Resultado
@@ -144,7 +144,7 @@ ADD idLaboratorista SMALLINT;
 GO
 
 ----------------------
---Alteraci�n de tabla paciente
+--Alteración de tabla paciente
 ----------------------
 
 ALTER TABLE paciente
@@ -152,7 +152,7 @@ ADD examenes SMALLINT;
 GO
 
 ----------------------
---Creaci�n de trigger de calculo de examenes
+--Creación de trigger de calculo de examenes
 ----------------------
 
 CREATE TRIGGER tr_UpdateExamenPaciente ON Resultado
@@ -160,6 +160,9 @@ FOR Insert
 AS
 GO
 
+----------------------
+--Creación de procedimiento para ingreso de resultado sin fechas de entrga y realización
+----------------------
 
 CREATE PROCEDURE AddResultado 
 @Nexamen VARCHAR(50),
@@ -196,6 +199,10 @@ BEGIN
 END
 
 GO
+
+----------------------
+--Creación de trigger para ingreso de fecha de realización y entrega
+----------------------
 
 CREATE PROCEDURE ingresoResultadoDetalles
     @fechaExamen DATETIME,
